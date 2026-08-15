@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent — Чат</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Боковая панель -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="logo">🤖 AI Agent</h1>
+                <p class="subtitle">Твой личный помощник</p>
+            </div>
+
+            <div class="sidebar-section">
+                <label class="label">Источник (мозг)</label>
+                <select id="ai-mode" class="select">
+                    <option value="zen" selected>DeepSeek V4 Flash Free (Zen, без ключа!)</option>
+                    <option value="gemini">Google Gemini (бесплатно, нужен ключ)</option>
+                    <option value="deepseek_free">DeepSeek Free (OpenRouter)</option>
+                    <option value="deepseek_api">DeepSeek API (ключ)</option>
+                    <option value="qwen">Qwen (ключ)</option>
+                </select>
+            </div>
+
+            <div class="sidebar-section">
+                <label class="label">API Ключ</label>
+                <input type="password" id="api-key" class="input" placeholder="sk-... (оставь пустым для Free)" />
+            </div>
+
+            <div class="sidebar-section">
+                <label class="label">🔑 IBM Quantum API Key</label>
+                <input type="password" id="ibm-api-key" class="input" placeholder="Токен IBM Quantum (quantum.ibm.com)" />
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
+
+            <div class="sidebar-section">
+                <label class="label">🔐 Quantum Inspire</label>
+                <input type="password" id="qi-api-token" class="input" placeholder="API Token (рекомендуется)" />
+                <input type="text" id="qi-email" class="input" style="margin-top:6px;" placeholder="Email (если нет токена)" />
+                <input type="password" id="qi-password" class="input" style="margin-top:6px;" placeholder="Password" />
+                <p style="font-size:10px;color:var(--text-muted);margin-top:4px;line-height:1.4;">
+                    🔐 Заполни ИЛИ токен, ИЛИ email+пароль.
+                    <a href="https://www.quantum-inspire.com" target="_blank" style="color:var(--accent)">Зарегистрироваться</a>
+                </p>
+                <button id="btn-save-credentials" class="btn btn-primary" style="width:100%;margin-top:10px;">💾 Сохранить данные</button>
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
+
+            <div class="sidebar-section">
+                <label class="label">🧠 ML: Hugging Face Token</label>
+                <input type="password" id="hf-token" class="input" placeholder="Токен Hugging Face (hf_...)" />
+                <p style="font-size:10px;color:var(--text-muted);margin-top:4px;line-height:1.4;">
+                    Для скачивания датасетов (Iris, MNIST, SST-2 и др.).
+                    <a href="https://huggingface.co/settings/tokens" target="_blank" style="color:var(--accent)">Получить токен</a>
+                </p>
+            </div>
+
+            <div class="sidebar-section">
+                <label class="label">🎮 ML: Kaggle API Key</label>
+                <input type="password" id="kaggle-key" class="input" placeholder="kaggle_username:kaggle_key" />
+                <p style="font-size:10px;color:var(--text-muted);margin-top:4px;line-height:1.4;">
+                    Для облачного GPU (тяжёлые ML-задачи).
+                    <a href="https://www.kaggle.com/settings" target="_blank" style="color:var(--accent)">Получить ключ</a>
+                </p>
+                <span id="save-status" style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;"></span>
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
+
+            <div class="sidebar-section">
+                <label class="label">☁️ Modal Token ID</label>
+                <input type="text" id="modal-token-id" class="input" placeholder="ak-... (для облачного GPU)" />
+            </div>
+
+            <div class="sidebar-section">
+                <label class="label">☁️ Modal Token Secret</label>
+                <input type="password" id="modal-token-secret" class="input" placeholder="as-... (для облачного GPU)" />
+                <p style="font-size:10px;color:var(--text-muted);margin-top:4px;line-height:1.4;">
+                    Для запуска ML на облачном GPU через Modal.com.
+                    <a href="https://modal.com/settings/tokens" target="_blank" style="color:var(--accent)">Создать токен</a>
+                </p>
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
+
+            <div class="sidebar-section">
+                <label class="label">🖥️ SSH Remote GPU Server</label>
+                <input type="text" id="ssh-host" class="input" placeholder="135.106.154.170" />
+                <div style="display:flex;gap:6px;margin-top:6px;">
+                    <input type="number" id="ssh-port" class="input" style="flex:0 0 70px;" placeholder="22" value="22" />
+                    <input type="text" id="ssh-username" class="input" style="flex:1;" placeholder="root" />
+                </div>
+                <input type="text" id="ssh-key-path" class="input" style="margin-top:6px;" placeholder="C:\Users\name\.ssh\id_ed25519" />
+                <input type="password" id="ssh-password" class="input" style="margin-top:6px;" placeholder="Пароль (если нет SSH-ключа)" />
+                <p style="font-size:10px;color:var(--text-muted);margin-top:4px;line-height:1.4;">
+                    Для запуска ML на удалённом GPU-сервере через SSH.
+                    Укажи ИЛИ SSH-ключ (приватный), ИЛИ пароль.
+                </p>
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
+
+            <div class="sidebar-section">
+                <label class="label">🧬 Био-проект (папка с .venv)</label>
+                <input type="text" id="bio-project-path" class="input" placeholder="C:\Users\lesya\OneDrive\Рабочий стол\cl_project" />
+                <p style="font-size:10px;color:var(--text-muted);margin-top:4px;line-height:1.4;">
+                    Для биопрограммирования (Cortical Labs): подключение к биокомпьютеру,
+                    чтение активности нейронов, стимуляция, анализ сигналов.
+                </p>
+            </div>
+
+            <div class="sidebar-section">
+                <label class="label">🧠 Нейро-окружение (SNN)</label>
+                <input type="text" id="neuro-python-path" class="input" placeholder="Не обязательно: python.exe или папка с .venv" />
+                <p style="font-size:10px;color:var(--text-muted);margin-top:4px;line-height:1.4;">
+                    Для нейроморфных вычислений (Lava, Akida, PyNN, Brian2, snnTorch,
+                    Nengo, Rockpool, BindsNET, Sinabs, JAX). Если пусто — используется
+                    системный Python (там библиотеки уже установлены).
+                </p>
+            </div>
+
+            <div class="sidebar-section">
+                <button id="btn-copy-dialog" class="btn btn-secondary" style="width:100%;" title="Копировать весь диалог">📋 Копировать диалог</button>
+            </div>
+
+            <div class="sidebar-section actions">
+                <button id="btn-new-chat" class="btn btn-secondary">➕ Новый чат</button>
+                <button id="btn-clear" class="btn btn-secondary">🗑️ Очистить</button>
+            </div>
+
+            <div class="sidebar-section info">
+                <div class="stat">
+                    <span class="stat-label">Модель:</span>
+                    <span id="model-name" class="stat-value">—</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Статус:</span>
+                    <span id="connection-status" class="stat-value">⏳</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <details>
+                    <summary style="cursor:pointer;font-size:12px;color:var(--text-muted);">📋 Как получить ключ?</summary>
+                    <div style="font-size:11px;color:var(--text-muted);margin-top:8px;line-height:1.6;">
+                        <b>🌟 Zen (DeepSeek V4 Flash Free)</b> — <b>работает без ключа!</b> Выбран по умолчанию.<br>
+                        <b>Google Gemini</b> — бесплатный ключ на <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent)">aistudio.google.com/apikey</a> (1500 запр./день)<br>
+                        <b>DeepSeek Free</b> — через OpenRouter (может быть медленно)<br>
+                        <b>DeepSeek API</b> — ключ на <a href="https://platform.deepseek.com" target="_blank" style="color:var(--accent)">platform.deepseek.com</a> (даёт $5 бесплатно)<br>
+                        <b>Qwen</b> — ключ на <a href="https://aliyun.com" target="_blank" style="color:var(--accent)">aliyun.com</a> (модель qwen-plus)
+                    </div>
+                </details>
+            </div>
+
+            <div class="sidebar-footer">
+                <p class="footer-text">🧠 Мозг — чужой. Всё остальное — своё.</p>
+                <p class="footer-text">🛠 Agent v2.0 | Automator</p>
+            </div>
+        </aside>
+
+        <!-- Основная область чата -->
+        <main class="chat-area">
+            <div class="messages-container" id="messages">
+                <div class="welcome">
+                    <div class="welcome-icon">🤖</div>
+                    <h2>Привет! Я — AI Agent</h2>
+                    <p>Напиши мне задачу, и я выполню её с помощью моих инструментов.</p>
+                    <p class="hint">Я умею запускать команды, читать/писать файлы и пользоваться Project Automator.</p>
+                </div>
+            </div>
+
+            <!-- Область ввода -->
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <textarea
+                        id="message-input"
+                        class="message-input"
+                        placeholder="Напиши сообщение..."
+                        rows="1"
+                    ></textarea>
+                    <div class="input-actions">
+                        <button id="btn-send" class="btn btn-primary" title="Отправить (Enter)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 2L11 13"></path>
+                                <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+                            </svg>
+                        </button>
+                        <button id="btn-stop" class="btn btn-danger" title="Остановить" style="display:none;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <p class="input-hint">Enter — отправить, Shift+Enter — новая строка</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
