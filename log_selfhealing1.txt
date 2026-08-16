@@ -1,0 +1,169 @@
+"Выполни тестовый ML-пайплайн локально, без использования внешних платных серверов или SSH.
+Используй инструмент fetch_dataset, чтобы получить датасет 'imdb' или 'sst2' из Hugging Face в streaming-режиме. Возьми только 500-1000 примеров для быстрого теста. Сохрани мета-информацию.
+Если нужные библиотеки (datasets, scikit-learn, pandas) не установлены, используй install_python_package для их тихой установки.
+Используй run_local_ml, чтобы обучить простую модель классификации (например, LogisticRegression с TfidfVectorizer) на этих данных.
+Сгенерируй красивый Markdown-отчет: [ОТЧЕТ ML МОДЕЛИ], включающий Accuracy, Precision, Recall, F1-score и матрицу ошибок [[TN, FP], [FN, TP]].
+Строго соблюдай правило: никаких plt.show(), только текстовый вывод или сохранение в файл. Если возникнет ошибка, примени self-healing (попробуй установить недостающий пакет) и повтори."
+⚡
+fetch_dataset
+{"action":"fetch_dataset","dataset_name":"sst2","hf_token":"hf_****************"}
+❌
+📋
+[Exit: -1]
+
+--- stderr ---
+Датасет 'sst2' не загрузился. Библиотека huggingface_hub требует полный формат 'организация/имя'.
+Примеры: 'stanfordnlp/imdb', 'rotten_tomatoes/rotten_tomatoes', 'sst2'.
+Попробуй указать полное имя датасета.
+⚡
+shell
+python -c "import datasets, sklearn, pandas; print('datasets OK:', datasets.__version__); print('sklearn OK:', sklearn.__version__); print('pandas OK:', pandas.__version__)"
+✅
+📋
+[Exit: 0]
+datasets OK: 5.0.0
+sklearn OK: 1.9.0
+pandas OK: 3.0.3
+⚡
+fetch_dataset
+{"action":"fetch_dataset","dataset_name":"stanfordnlp/imdb","hf_token":"hf_****************"}
+✅
+📋
+[Exit: 0]
+Датасет 'stanfordnlp/imdb' успешно загружен (streaming)!
+
+Разбивка по split'ам:
+  • train
+  • test
+  • unsupervised
+
+Колонки: text, label
+
+Пример данных (первые записи):
+{"text": "I rented I AM CURIOUS-YELLOW from my video store because of all the controversy ", "label": 0}
+{"text": "\"I Am Curious: Yellow\" is a risible and pretentious steaming pile. It doesn't ma", "label": 0}
+{"text": "If only to avoid making this type of film in the future. This film is interestin", "label": 0}
+{"text": "This film was probably inspired by Godard's Masculin, féminin and I urge you to ", "label": 0}
+{"text": "Oh, brother...after hearing about this ridiculous film for umpteen years all I c", "label": 0}
+
+Мета-информация сохранена: C:\Users\lesya\my_agent_copy01QWANT\datasets\stanfordnlp_imdb_meta.json
+
+Совет: используй run_local_ml для анализа этих данных с помощью pandas и scikit-learn.
+⚡
+run_local_ml
+{"action":"run_local_ml","ml_code":"import json\nfrom datasets import load_dataset\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.linear_model import LogisticRegression\nfr
+❌
+📋
+[Exit: 1]
+
+--- stderr ---
+Ошибка выполнения ML-кода:
+  [ОШИБКА ML] sklearn: This solver needs samples of at least 2 classes in the data, but the data contains only one class: np.int64(0)
+  [ПОДСКАЗКА] Проверь параметры: n_informative + n_redundant + n_repeated должно быть меньше n_features. Используй n_samples=1000, n_features=20, n_informative=2, n_redundant=2, n_classes=2
+⚡
+run_local_ml
+{"action":"run_local_ml","ml_code":"import json\nfrom datasets import load_dataset\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.linear_model import LogisticRegression\nfr
+❌
+📋
+[Exit: 1]
+
+--- stderr ---
+Ошибка выполнения ML-кода:
+  [ОШИБКА ML] sklearn: This solver needs samples of at least 2 classes in the data, but the data contains only one class: np.int64(0)
+  [ПОДСКАЗКА] Проверь параметры: n_informative + n_redundant + n_repeated должно быть меньше n_features. Используй n_samples=1000, n_features=20, n_informative=2, n_redundant=2, n_classes=2
+⚡
+run_local_ml
+{"action":"run_local_ml","ml_code":"from datasets import load_dataset\n\n# Диагностика: что реально возвращает streaming-итератор\nds = load_dataset(\"stanfordnlp/imdb\", split=\"train\", streaming=Tr
+✅
+📋
+[Exit: 0]
+Всего примеров: 800
+Уникальных меток: {0}
+label=0: 800, label=1: 0
+Первые 10 меток: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Последние 10 меток: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Длина первого текста: 329
+Первые 80 символов: Although the director tried(the filming was made in Tynisia and Morocco),this at
+⚡
+run_local_ml
+{"action":"run_local_ml","ml_code":"from datasets import load_dataset\n\nds = load_dataset(\"stanfordnlp/imdb\", split=\"train\", streaming=True)\n\n# Считаем метки по первым 30000 примеров, чтобы уви
+✅
+📋
+[Exit: 0]
+После 5000 примеров: {0: 5001, 1: 0}
+После 10000 примеров: {0: 10001, 1: 0}
+После 15000 примеров: {0: 12500, 1: 2501}
+После 20000 примеров: {0: 12500, 1: 7501}
+Итого: {0: 12500, 1: 12500}
+Первый label=1 встретился на позиции: 12500
+⚡
+run_local_ml
+{"action":"run_local_ml","ml_code":"import json, random\nfrom datasets import load_dataset\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.linear_model import LogisticRegres
+✅
+📋
+[Exit: 0]
+[ОТЧЕТ ML МОДЕЛИ]
+
+Финальная точность: 83.75%
+Тренд обучения: нет данных
+Дополнительные метрики: precision: 85.53%, recall: 81.25%, f1: 83.33%
+
+Детализация ошибок:
+  Верно предсказано: 134 (83.8%)
+  Ложноположительных (FP): 11 (6.9%)
+  Ложноотрицательных (FN): 15 (9.4%)
+  Матрица ошибок:
+    [[ TN=69, FP=11 ],
+     [ FN=15, TP=65 ]]
+
+Размер выборки: 800 примеров
+🤖
+Agent
+19:29
+✅ Задача выполнена! Модель анализа тональности на IMDB успешно обучена.
+
+📊 Итоговые результаты
+
+
+| Метрика | Значение |
+|---------|----------|
+| Accuracy | 83.75% |
+| Precision | 85.53% |
+| Recall | 81.25% |
+| F1-score | 83.33% |
+
+Матрица ошибок:
+Предсказано: 0   Предсказано: 1
+Реально: 0       69 (TN)          11 (FP)
+Реально: 1       15 (FN)          65 (TP)
+
+
+🛠 Что было сделано
+
+
+1. Загрузка данных — 800 отзывов IMDB (400 негативных + 400 позитивных) через Hugging Face в streaming-режиме.
+2. Диагностика и self-healing — обнаружил, что streaming-итерация IMDB идёт без перемешивания: первые 12 500 примеров — все негативные, затем 12 500 позитивных. Из-за этого первые 800 примеров содержали только один класс. Решение: сбалансированная выборка (400 + 400) с последующим перемешиванием.
+3. Векторизация — TF-IDF с 5000 признаков, удаление стоп-слов.
+4. Модель — логистическая регрессия (80/20 train/test split).
+
+💡 Что означают метрики
+
+
+83.75% точность — модель правильно определяет тональность ~84 из 100 отзывов. Это хороший результат для простой модели на небольшой выборке (800 примеров).
+
+Precision 85.5% — когда модель говорит «позитивный», она права в 85.5% случаев.
+
+Recall 81.25% — модель находит 81% всех реально позитивных отзывов.
+
+
+🚀 Как можно улучшить
+
+
+Больше данных — увеличить выборку до 5–10 тыс. отзывов (данные бесплатно доступны на Hugging Face).
+
+Более мощная модель — BERT/DistilBERT (трансформер) даёт ~90–95% на IMDB, но требует GPU. Могу запустить через облачный GPU (Modal/Kaggle), если нужно.
+
+n-граммы — добавить биграммы в TF-IDF для учёта фраз типа «not good».
+
+
+Хотите, чтобы я обучил более точную модель (трансформер на GPU) или протестировал текущую на ваших собственных отзывах?

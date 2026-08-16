@@ -1,0 +1,573 @@
+Твоя главная задача: полностью самостоятельно создать и обучить нейросеть с нуля на удаленном GPU через инструмент `run_ssh_ml`.
+
+Требования к задаче:
+1. Датасет: Используй `torchvision.datasets.CIFAR10` (он маленький, ~150 МБ, скачивается быстро). Загрузи обучающую и тестовую выборки.
+2. Архитектура: Напиши код простой, но эффективной сверточной нейросети (CNN) на PyTorch (например, 2-3 слоя Conv2d + MaxPool2d + Linear). Не используй готовые `resnet18`, напиши свою архитектуру через `nn.Module`, чтобы это было обучение "с нуля".
+3. Обучение: 
+   - Функция потерь: `nn.CrossEntropyLoss`
+   - Оптимизатор: `Adam` или `SGD`
+   - Количество эпох: РОВНО 5 эпох (чтобы уложиться в лимиты и быстро получить результат).
+   - Размер батча (batch_size): начни с 64. 
+4. Вывод: В цикле обучения выводи в консоль номер эпохи, текущий Loss и Accuracy. В конце выведи итоговую точность на тестовом наборе (Test Accuracy).
+5. САМОИСЦЕЛЕНИЕ: Если в stderr появится ошибка "CUDA out of memory", ты должен автоматически переписать код, уменьшив `batch_size` (например, до 32 или 16), добавить `torch.cuda.empty_cache()` и запустить `run_ssh_ml` заново.
+⚡
+run_ssh_ml
+{"action":"run_ssh_ml","ml_code":"\nimport torch\nimport torch.nn as nn\nimport torch.optim as optim\nimport torch.nn.functional as F\nimport torchvision\nimport torchvision.transforms as transforms\n
+✅
+📋
+[Exit: 0]
+Using device: cuda
+GPU: NVIDIA L4
+Loading CIFAR10 dataset...
+
+Starting training...
+==================================================
+Total parameters: 620,810
+  Batch 100/782 - Loss: 1.6581
+  Batch 200/782 - Loss: 1.4525
+  Batch 300/782 - Loss: 1.4197
+  Batch 400/782 - Loss: 1.3675
+  Batch 500/782 - Loss: 1.4692
+  Batch 600/782 - Loss: 1.2177
+  Batch 700/782 - Loss: 1.1670
+
+
+
+Epoch [1/5] - Time: 4.1s - Loss: 1.3959 - Accuracy: 49.30%
+--------------------------------------------------
+  Batch 100/782 - Loss: 1.0723
+  Batch 200/782 - Loss: 1.1212
+  Batch 300/782 - Loss: 0.9813
+  Batch 400/782 - Loss: 0.8906
+  Batch 500/782 - Loss: 1.0565
+  Batch 600/782 - Loss: 1.0440
+  Batch 700/782 - Loss: 0.9845
+
+Epoch [2/5] - Time: 3.7s - Loss: 1.0642 - Accuracy: 62.46%
+--------------------------------------------------
+  Batch 100/782 - Loss: 1.0927
+  Batch 200/782 - Loss: 0.6877
+  Batch 300/782 - Loss: 0.9896
+  Batch 400/782 - Loss: 1.0804
+  Batch 500/782 - Loss: 1.0523
+  Batch 600/782 - Loss: 0.9331
+  Batch 700/782 - Loss: 1.1183
+
+Epoch [3/5] - Time: 3.7s - Loss: 0.9363 - Accuracy: 67.32%
+--------------------------------------------------
+  Batch 100/782 - Loss: 0.8782
+  Batch 200/782 - Loss: 0.6281
+  Batch 300/782 - Loss: 0.7852
+  Batch 400/782 - Loss: 0.8654
+  Batch 500/782 - Loss: 0.7631
+  Batch 600/782 - Loss: 0.7643
+  Batch 700/782 - Loss: 0.6698
+
+Epoch [4/5] - Time: 3.7s - Loss: 0.8465 - Accuracy: 70.43%
+--------------------------------------------------
+  Batch 100/782 - Loss: 0.7879
+  Batch 200/782 - Loss: 0.7762
+  Batch 300/782 - Loss: 0.7141
+  Batch 400/782 - Loss: 0.8260
+  Batch 500/782 - Loss: 0.8410
+  Batch 600/782 - Loss: 0.7157
+  Batch 700/782 - Loss: 0.6726
+
+Epoch [5/5] - Time: 3.6s - Loss: 0.7834 - Accuracy: 72.75%
+--------------------------------------------------
+
+Evaluating on test set...
+
+==================================================
+FINAL TEST ACCURACY: 72.23%
+==================================================
+
+Per-class accuracy:
+   plane: 89.90%
+     car: 92.90%
+    bird: 53.00%
+     cat: 40.60%
+    deer: 73.80%
+     dog: 65.60%
+    frog: 75.70%
+   horse: 82.90%
+    ship: 79.90%
+   truck: 68.00%
+
+Training complete!
+
+--- stderr ---
+
+  0%|          | 0.00/170M 
+
+0%|█████████▉| 170M/170M [46:29<00:00, 75.9kB/s]
+100%|██████████| 170M/170M [46:29<00:00, 61.1kB/s]
+❌ Total time limit reached (1800s). The task took too long.
+👤
+Ты
+17:46
+📋
+🔄
+✏️
+Отличная работа! Обучение прошло успешно (72.23%), но в конце возник таймаут из-за спама прогресс-бара скачивания при медленной сети.
+
+Давай запустим финальный, чистый тест. Поскольку датасет, скорее всего, уже частично или полностью скачан на сервер, мы оптимизируем код.
+
+Твоя задача: запустить тот же код обучения через `run_ssh_ml`, но с двумя критическими улучшениями:
+
+1. В самом верху скрипта отключи прогресс-бары tqdm глобально:
+   import os
+   os.environ["TQDM_DISABLE"] = "1"
+
+2. Перед скачиванием проверь, существует ли уже папка с данными, чтобы не качать заново:
+   import os
+   data_path = './data/cifar-10-batches-py'
+   if not os.path.exists(data_path):
+       print("📥 Скачивание датасета CIFAR-10...")
+       # код скачивания
+   else:
+       print("✅ Датасет уже существует, пропускаю скачивание!")
+
+3. Далее идет твоя архитектура CNN и цикл обучения на 5 эпох (как в прошлый раз, это сработало отлично).
+4. В конце выведи FINAL TEST ACCURACY.
+
+Сгенерируй этот оптимизированный код и вызови `run_ssh_ml`.
+⚡
+run_ssh_ml
+{"action":"run_ssh_ml","ml_code":"import os\nimport torch\nimport torch.nn as nn\nimport torch.optim as optim\nimport torchvision\nimport torchvision.transforms as transforms\n\n# === Отключаем прогре
+✅
+📋
+[Exit: 0]
+✅ Датасет уже существует, пропускаю скачивание!
+🚀 Устройство: cuda
+==================================================
+Начинаю обучение на 5 эпох...
+==================================================
+📊 Эпоха [1/5]  Loss: 1.4300  Accuracy: 47.77%
+📊 Эпоха [2/5]  Loss: 1.0054  Accuracy: 64.39%
+📊 Эпоха [3/5]  Loss: 0.8224  Accuracy: 71.20%
+📊 Эпоха [4/5]  Loss: 0.7006  Accuracy: 75.48%
+📊 Эпоха [5/5]  Loss: 0.6069  Accuracy: 78.43%
+==================================================
+🧪 Тестирование на тестовом наборе...
+==================================================
+🎯 FINAL TEST ACCURACY: 75.75%
+==================================================
+🤖
+Agent
+17:47
+✅ Обучение успешно завершено!
+
+
+Всё прошло идеально — ни единой ошибки, датасет уже был на сервере, обучение на GPU отработало быстро и чисто.
+
+📊 Итоговые результаты
+
+
+| Эпоха | Loss    | Accuracy |
+|-------|---------|----------|
+| 1/5   | 1.4300  | 47.77%   |
+| 2/5   | 1.0054  | 64.39%   |
+| 3/5   | 0.8224  | 71.20%   |
+| 4/5   | 0.7006  | 75.48%   |
+| 5/5   | 0.6069  | 78.43%   |
+
+🎯 FINAL TEST ACCURACY: 75.75%
+
+
+🔍 Анализ
+
+
+1. Динамика обучения отличная — loss стабильно падает (с 1.43 до 0.61), accuracy растёт каждую эпоху. Модель не застряла и не переобучилась.
+
+2. Test Accuracy (75.75%) очень близка к последней тренировочной (78.43%) — разрыв всего ~2.7%, что говорит о хорошей обобщающей способности без переобучения.
+
+3. Своя CNN с 3 слоями справилась достойно — для 5 эпох и простой архитектуры это отличный результат. Обычно CIFAR-10 baseline для такой архитектуры — около 70-75%, так что мы даже немного выше среднего.
+
+4. Улучшения (если понадобится в будущем):
+   - Увеличить число эпох до 15-20 → можно получить 82-85%
+   - Добавить BatchNormalization → ускорит сходимость
+   - Использовать CosineAnnealingLR → плавное снижение lr
+   - Увеличить batch_size до 128 (если позволит память GPU)
+
+Задача полностью выполнена! 🚀
+👤
+Ты
+17:49
+📋
+🔄
+✏️
+Теперь создадим простой веб-интерфейс для тестирования модели на своих изображениях.
+
+Твоя задача: создать Gradio-приложение через `run_ssh_ml`.
+
+Требования:
+1. В начале установи Gradio (если не установлена):
+   subprocess.run([sys.executable, "-m", "pip", "install", "--break-system-packages", "gradio"], check=True)
+
+2. Загрузи обученную модель из файла `/tmp/cnn_cifar10.pth`.
+
+3. Создай функцию predict(image), которая:
+   - Принимает изображение (PIL Image)
+   - Приводит его к формату CIFAR-10 (32x32, нормализация)
+   - Делает предсказание
+   - Возвращает словарь с вероятностями для всех 10 классов
+
+4. Создай Gradio Interface:
+   - Вход: изображение (upload)
+   - Выход: метки (labels) с вероятностями
+   - Заголовок: "CIFAR-10 Classifier"
+   - Описание: "Загрузите изображение 32x32 или любое другое — модель предскажет класс"
+
+5. Запусти приложение на порту 7860:
+   demo.launch(server_name="0.0.0.0", server_port=7860, share=False)
+
+6. В конце выведи:
+   print("🌐 Веб-интерфейс запущен!")
+   print("Откройте в браузере: http://***.***.***.***:7860")
+   sys.stdout.flush()
+
+Сгенерируй код и вызови `run_ssh_ml`.
+⚡
+run_ssh_ml
+{"action":"run_ssh_ml","ml_code":"import subprocess, sys, os, warnings\nwarnings.filterwarnings(\"ignore\")\nos.environ[\"TQDM_DISABLE\"] = \"1\"\n\n# Устанавливаем Gradio (если не установлен)\nprint(
+❌
+📋
+[Exit: 1]
+📦 Установка Gradio...
+✅ Gradio установлен
+🔧 Использую устройство: cuda
+❌ Модель не найдена по пути /tmp/cnn_cifar10.pth
+   Возможно, нужно сначала обучить модель через run_ssh_ml
+⚡
+run_ssh_ml
+{"action":"run_ssh_ml","ml_code":"import os, subprocess, sys\n\nprint(\"=== Проверка окружения ===\")\nprint(f\"Python: {sys.executable}\")\nprint(f\"Python version: {sys.version}\")\n\n# Проверяем на
+✅
+📋
+[Exit: 0]
+=== Проверка окружения ===
+Python: /usr/bin/python3
+Python version: 3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]
+❌ Модель НЕ найдена: /tmp/cnn_cifar10.pth
+✅ torch: 2.13.0+cu130
+   CUDA available: True
+   GPU: NVIDIA L4
+✅ gradio: 6.21.0
+⚡
+run_ssh_ml
+{"action":"run_ssh_ml","ml_code":"import os, subprocess, sys, warnings\nwarnings.filterwarnings(\"ignore\")\nos.environ[\"TQDM_DISABLE\"] = \"1\"\nos.environ[\"TF_CPP_MIN_LOG_LEVEL\"] = \"3\"\n\n# ===
+✅
+📋
+[Exit: 0]
+=== Поиск модели .pth ===
+Найдено 2 .pth файлов:
+  /usr/lib/python3/dist-packages/distutils-precedence.pth (0.1 KB)
+  /usr/local/lib/python3.12/dist-packages/distutils-precedence.pth (0.1 KB)
+
+=== Важные пакеты ===
+  gradio==6.21.0
+  gradio_client==2.6.0
+  hf-gradio==0.4.1
+  torch==2.13.0
+  torchvision==0.28.0
+⚡
+run_ssh_ml
+{"action":"run_ssh_ml","ml_code":"import subprocess, sys, os, warnings\nwarnings.filterwarnings(\"ignore\")\nos.environ[\"TQDM_DISABLE\"] = \"1\"\nos.environ[\"TF_CPP_MIN_LOG_LEVEL\"] = \"3\"\n\n# Уст
+❌
+📋
+[Exit: 1]
+🔧 Устройство: cuda
+   GPU: NVIDIA L4
+✅ Датасет уже есть, загружаю...
+📊 Размер обучающей выборки: 50000
+
+🚀 Начинаем обучение на 5 эпох...
+============================================================
+  Эпоха [1/5] Batch [100/704] Loss: 1.6572
+  Эпоха [1/5] Batch [200/704] Loss: 1.4616
+  Эпоха [1/5] Batch [300/704] Loss: 1.3160
+  Эпоха [1/5] Batch [400/704] Loss: 1.4471
+  Эпоха [1/5] Batch [500/704] Loss: 1.2988
+  Эпоха [1/5] Batch [600/704] Loss: 1.2089
+  Эпоха [1/5] Batch [700/704] Loss: 1.3165
+
+📊 Эпоха 1/5 | Loss: 1.4933 | Train Acc: 45.54% | Val Acc: 54.12%
+------------------------------------------------------------
+  Эпоха [2/5] Batch [100/704] Loss: 1.3235
+  Эпоха [2/5] Batch [200/704] Loss: 1.4249
+  Эпоха [2/5] Batch [300/704] Loss: 1.2309
+  Эпоха [2/5] Batch [400/704] Loss: 1.0332
+  Эпоха [2/5] Batch [500/704] Loss: 1.0111
+  Эпоха [2/5] Batch [600/704] Loss: 1.0561
+  Эпоха [2/5] Batch [700/704] Loss: 1.0406
+
+📊 Эпоха 2/5 | Loss: 1.1467 | Train Acc: 59.05% | Val Acc: 56.62%
+------------------------------------------------------------
+  Эпоха [3/5] Batch [100/704] Loss: 1.1920
+  Эпоха [3/5] Batch [200/704] Loss: 0.9655
+  Эпоха [3/5] Batch [300/704] Loss: 0.9693
+  Эпоха [3/5] Batch [400/704] Loss: 1.1278
+  Эпоха [3/5] Batch [500/704] Loss: 1.0323
+  Эпоха [3/5] Batch [600/704] Loss: 0.8099
+  Эпоха [3/5] Batch [700/704] Loss: 0.7830
+
+📊 Эпоха 3/5 | Loss: 1.0116 | Train Acc: 64.22% | Val Acc: 67.12%
+------------------------------------------------------------
+  Эпоха [4/5] Batch [100/704] Loss: 0.9321
+  Эпоха [4/5] Batch [200/704] Loss: 1.0291
+  Эпоха [4/5] Batch [300/704] Loss: 0.9536
+  Эпоха [4/5] Batch [400/704] Loss: 0.9871
+  Эпоха [4/5] Batch [500/704] Loss: 0.8935
+  Эпоха [4/5] Batch [600/704] Loss: 0.8737
+  Эпоха [4/5] Batch [700/704] Loss: 0.9879
+
+📊 Эпоха 4/5 | Loss: 0.9225 | Train Acc: 67.50% | Val Acc: 70.76%
+------------------------------------------------------------
+  Эпоха [5/5] Batch [100/704] Loss: 0.7792
+  Эпоха [5/5] Batch [200/704] Loss: 0.5770
+  Эпоха [5/5] Batch [300/704] Loss: 0.8307
+  Эпоха [5/5] Batch [400/704] Loss: 0.9394
+  Эпоха [5/5] Batch [500/704] Loss: 0.8874
+  Эпоха [5/5] Batch [600/704] Loss: 0.8580
+  Эпоха [5/5] Batch [700/704] Loss: 0.7861
+
+📊 Эпоха 5/5 | Loss: 0.8504 | Train Acc: 70.26% | Val Acc: 71.80%
+------------------------------------------------------------
+
+🧪 Тестирование на тестовой выборке...
+
+============================================================
+🎯 FINAL TEST ACCURACY: 73.85%
+============================================================
+
+📊 Точность по классам:
+      airplane: 76.1% (761/1000)
+    automobile: 92.4% (924/1000)
+          bird: 63.7% (637/1000)
+           cat: 37.0% (370/1000)
+          deer: 75.2% (752/1000)
+           dog: 72.5% (725/1000)
+          frog: 77.4% (774/1000)
+         horse: 81.2% (812/1000)
+          ship: 89.9% (899/1000)
+         truck: 73.1% (731/1000)
+
+💾 Модель сохранена: /tmp/cnn_cifar10.pth (2435.1 KB)
+
+🌐 Запуск Gradio веб-интерфейса...
+
+--- stderr ---
+Traceback (most recent call last):
+  File "/tmp/agent_script.py", line 215, in <module>
+    outputs=gr.Label(num_top_top_classes=5, label="Топ-5 предсказаний"),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/gradio/component_meta.py", line 194, in wrapper
+    return fn(self, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+TypeError: Label.__init__() got an unexpected keyword argument 'num_top_top_classes'
+⚡
+run_ssh_ml
+{"action":"run_ssh_ml","ml_code":"import os, warnings\nwarnings.filterwarnings(\"ignore\")\nos.environ[\"TQDM_DISABLE\"] = \"1\"\nos.environ[\"TF_CPP_MIN_LOG_LEVEL\"] = \"3\"\n\nimport torch\nimport t
+❌
+📋
+[Exit: 1]
+🔧 Устройство: cuda
+✅ Модель загружена (2435.1 KB)
+📦 Импорт Gradio...
+🌐 Запуск Gradio...
+
+--- stderr ---
+Traceback (most recent call last):
+  File "/tmp/agent_script.py", line 83, in <module>
+    demo = gr.Interface(
+           ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/gradio/interface.py", line 171, in __init__
+    super().__init__(
+  File "/usr/local/lib/python3.12/dist-packages/gradio/blocks.py", line 1159, in __init__
+    super().__init__(render=False, **kwargs)
+TypeError: BlockContext.__init__() got an unexpected keyword argument 'allow_flagging'
+⚡
+run_ssh_ml
+{"action":"run_ssh_ml","ml_code":"import os, warnings\nwarnings.filterwarnings(\"ignore\")\nos.environ[\"TQDM_DISABLE\"] = \"1\"\nos.environ[\"TF_CPP_MIN_LOG_LEVEL\"] = \"3\"\n\nimport torch\nimport t
+⏳
+📋
+🤖
+Agent
+18:14
+⏹️ Запрос остановлен пользователем.
+
+Можешь продолжить — напиши новое сообщение.
+👤
+Ты
+18:14
+📋
+🔄
+✏️
+Модель успешно обучена (73.85%) и сохранена в `/tmp/cnn_cifar10.pth`. Теперь нужно запустить Gradio веб-интерфейс для тестирования.
+
+Проблема: ты используешь устаревшие параметры Gradio API. Давай сделаем максимально простую версию.
+
+Твоя задача: создать скрипт через `run_ssh_ml` с ТОЛЬКО этими параметрами Gradio:
+
+1. Загрузи модель из `/tmp/cnn_cifar10.pth`
+2. Создай функцию predict(image):
+   - Принимает PIL Image
+   - Приводит к формату CIFAR-10 (resize 32x32, ToTensor, нормализация)
+   - Делает предсказание
+   - Возвращает словарь: {"airplane": 0.1, "automobile": 0.05, ...} для всех 10 классов
+
+3. Создай Gradio Interface БЕЗ лишних параметров:
+   ```python
+   demo = gr.Interface(
+       fn=predict,
+       inputs=gr.Image(type="pil"),
+       outputs=gr.Label(num_top_classes=5),
+       title="CIFAR-10 Classifier",
+       description="Загрузите изображение — модель предскажет класс"
+   )
+❌ Session is busy
+👤
+Ты
+18:15
+📋
+🔄
+✏️
+Модель успешно обучена (73.85%) и сохранена в `/tmp/cnn_cifar10.pth`. Теперь нужно запустить Gradio веб-интерфейс для тестирования.
+
+Проблема: ты используешь устаревшие параметры Gradio API. Давай сделаем максимально простую версию.
+
+Твоя задача: создать скрипт через `run_ssh_ml` с ТОЛЬКО этими параметрами Gradio:
+
+1. Загрузи модель из `/tmp/cnn_cifar10.pth`
+2. Создай функцию predict(image):
+   - Принимает PIL Image
+   - Приводит к формату CIFAR-10 (resize 32x32, ToTensor, нормализация)
+   - Делает предсказание
+   - Возвращает словарь: {"airplane": 0.1, "automobile": 0.05, ...} для всех 10 классов
+
+3. Создай Gradio Interface БЕЗ лишних параметров:
+   ```python
+   demo = gr.Interface(
+       fn=predict,
+       inputs=gr.Image(type="pil"),
+       outputs=gr.Label(num_top_classes=5),
+       title="CIFAR-10 Classifier",
+       description="Загрузите изображение — модель предскажет класс"
+   )
+❌ Session is busy
+
+
+
+
+новый чат 
+
+
+
+
+
+Модель обучена с BatchNorm слоями. Вот ТОЧНАЯ архитектура, которая соответствует сохранённым весам. Скопируй код целиком, не меняй архитектуру!
+
+Передай этот код в `run_ssh_ml` (параметр `ml_code`):
+
+```python
+import os, warnings, sys
+warnings.filterwarnings("ignore")
+os.environ["TQDM_DISABLE"] = "1"
+
+import torch
+import torch.nn as nn
+import torchvision.transforms as transforms
+from PIL import Image
+import gradio as gr
+
+CLASSES = ['airplane', 'automobile', 'bird', 'cat', 'deer', 
+           'dog', 'frog', 'horse', 'ship', 'truck']
+
+# ТОЧНАЯ архитектура модели (с BatchNorm!)
+class SimpleCNN(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
+        self.bn1 = nn.BatchNorm2d(32)
+        self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
+        self.bn2 = nn.BatchNorm2d(64)
+        self.conv3 = nn.Conv2d(64, 128, 3, padding=1)
+        self.bn3 = nn.BatchNorm2d(128)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.fc1 = nn.Linear(128 * 4 * 4, 256)
+        self.fc2 = nn.Linear(256, 10)
+        self.relu = nn.ReLU()
+    
+    def forward(self, x):
+        x = self.pool(self.relu(self.bn1(self.conv1(x))))
+        x = self.pool(self.relu(self.bn2(self.conv2(x))))
+        x = self.pool(self.relu(self.bn3(self.conv3(x))))
+        x = x.view(-1, 128 * 4 * 4)
+        x = self.relu(self.fc1(x))
+        x = self.fc2(x)
+        return x
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = SimpleCNN().to(device)
+model.load_state_dict(torch.load('/tmp/cnn_cifar10.pth', map_location=device))
+model.eval()
+print(f"✅ Модель загружена на {device}")
+sys.stdout.flush()
+
+transform = transforms.Compose([
+    transforms.Resize((32, 32)),
+    transforms.ToTensor(),
+    transforms.Normalize((0.4914, 0.4822, 0.4465), 
+                         (0.2023, 0.1994, 0.2010))
+])
+
+def predict(image):
+    if image is None:
+        return {}
+    image = image.convert('RGB')
+    tensor = transform(image).unsqueeze(0).to(device)
+    with torch.no_grad():
+        outputs = model(tensor)
+        probs = torch.nn.functional.softmax(outputs[0], dim=0)
+    return {CLASSES[i]: float(probs[i].cpu().numpy()) for i in range(10)}
+
+demo = gr.Interface(
+    fn=predict,
+    inputs=gr.Image(type="pil", label="Загрузите изображение"),
+    outputs=gr.Label(num_top_classes=5, label="Предсказание"),
+    title="🎯 CIFAR-10 Classifier",
+    description="Загрузите любое изображение — модель предскажет класс"
+)
+
+print("🌐 Запуск веб-интерфейса...")
+print("Откройте: http://***.***.***.***:7860")
+sys.stdout.flush()
+demo.launch(server_name="0.0.0.0", server_port=7860, share=False)
+⚡
+run_ssh_ml
+{"action":"run_ssh_ml","ml_code":"import os, warnings, sys\nwarnings.filterwarnings(\"ignore\")\nos.environ[\"TQDM_DISABLE\"] = \"1\"\n\nimport torch\nimport torch.nn as nn\nimport torchvision.transfo
+❌
+📋
+[Exit: 1]
+✅ Модель загружена на cuda
+🌐 Запуск веб-интерфейса...
+Откройте: http://***.***.***.***:7860
+
+--- stderr ---
+Traceback (most recent call last):
+  File "/tmp/agent_script.py", line 73, in <module>
+    demo.launch(server_name="0.0.0.0", server_port=7860, share=False)
+  File "/usr/local/lib/python3.12/dist-packages/gradio/blocks.py", line 2992, in launch
+    ) = http_server.start_server(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/gradio/http_server.py", line 182, in start_server
+    raise OSError(
+OSError: Cannot find empty port in range: 7860-7860. You can specify a different port by setting the GRADIO_SERVER_PORT environment variable or passing the `server_port` parameter to `launch()`.
+⚡
+run_ssh_ml
+{"action":"run_ssh_ml","ml_code":"import os, warnings, sys\nwarnings.filterwarnings(\"ignore\")\nos.environ[\"TQDM_DISABLE\"] = \"1\"\n\nimport torch\nimport torch.nn as nn\nimport torchvision.transfo
+
+
+
+
+видео есть . это создал ии агент 

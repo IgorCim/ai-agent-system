@@ -1,0 +1,550 @@
+Используй мой Hugging Face токен из боковой панели, чтобы скачать датасет 'mnist'. Затем напиши и сохрани Python-скрипт для простой нейросети на PyTorch (например, 2 полносвязных слоя), обучи её на 3 эпохах и выведи итоговую точность (accuracy) на тестовой выборке в красивом Markdown-отчете. Для запуска скрипта используй инструмент shell
+⚡fetch_dataset{"action":"fetch_dataset","dataset_name":"mnist","hf_token":"hf_****************"}❌📋
+[Exit: -1]
+
+--- stderr ---
+Ошибка при скачивании датасета: Dataset 'stanfordnlp/mnist' doesn't exist on the Hub or cannot be accessed.
+⚡fetch_dataset{"action":"fetch_dataset","dataset_name":"ylecun/mnist","hf_token":"hf_****************"}✅📋
+[Exit: 0]
+Датасет 'ylecun/mnist' успешно скачан!
+
+Статистика:
+  Всего записей: 70000
+  Разбивка по split'ам:
+  • train: 60000 записей
+  • test: 10000 записей
+
+Колонки: image, label
+
+Пример данных (первые записи):
+{"label": 5}
+{"label": 0}
+{"label": 4}
+
+Мета-информация сохранена: C:\Users\lesya\my_agent_copy01QWANT\datasets\ylecun_mnist_meta.json
+
+Совет: используй run_local_ml для анализа этих данных с помощью pandas и scikit-learn.
+⚡shellpython -c "import torch; print(torch.__version__)"✅📋
+[Exit: 0]
+2.13.0+cpu
+
+⚡shellpython -c "import datasets; print(datasets.__version__)"✅📋
+[Exit: 0]
+5.0.0
+
+⚡file_writeC:\Users\lesya\Desktop\mnist_pytorch\train_mnist.py✅📋
+[Exit: 0]
+File written: C:\Users\lesya\Desktop\mnist_pytorch\train_mnist.py (4873 chars)
+⚡shellcd C:\Users\lesya\Desktop\mnist_pytorch && python train_mnist.py❌📋
+[Exit: 1]
+         MNIST   Hugging Face...
+Train: 60000        , Test: 10000        
+Train samples: 60000, Test samples: 10000
+Device: cpu
+Model: SimpleNN(
+  (fc1): Linear(in_features=784, out_features=128, bias=True)
+  (relu): ReLU()
+  (fc2): Linear(in_features=128, out_features=10, bias=True)
+)
+Params: 101,770
+        1/3 | Loss: 0.3453 | Train Acc: 90.62%
+        2/3 | Loss: 0.1584 | Train Acc: 95.47%
+        3/3 | Loss: 0.1083 | Train Acc: 96.86%
+
+============================================================
+
+--- stderr ---
+`trust_remote_code` is not supported anymore.
+Please check that the Hugging Face dataset 'ylecun/mnist' isn't based on a loading script and remove `trust_remote_code`.
+If the dataset is based on a loading script, please ask the dataset author to remove it and convert it to a standard format like Parquet.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Traceback (most recent call last):
+  File "C:\Users\lesya\Desktop\mnist_pytorch\train_mnist.py", line 113, in <module>
+    print("\U0001f4ca                      MNIST            \U0001f4ca")
+  File "C:\Users\lesya\AppData\Local\Programs\Python\Python312\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4ca' in position 0: character maps to <undefined>
+
+⚡file_writeC:\Users\lesya\Desktop\mnist_pytorch\train_mnist.py✅📋
+[Exit: 0]
+File written: C:\Users\lesya\Desktop\mnist_pytorch\train_mnist.py (4850 chars)
+⚡shellcd C:\Users\lesya\Desktop\mnist_pytorch && python train_mnist.py✅📋
+[Exit: 0]
+Zagruzka MNIST s Hugging Face...
+Train: 60000 zapisey, Test: 10000 zapisey
+Train samples: 60000, Test samples: 10000
+Device: cpu
+Model: SimpleNN(
+  (fc1): Linear(in_features=784, out_features=128, bias=True)
+  (relu): ReLU()
+  (fc2): Linear(in_features=128, out_features=10, bias=True)
+)
+Params: 101,770
+  Epoha 1/3 | Loss: 0.3382 | Train Acc: 90.90%
+  Epoha 2/3 | Loss: 0.1523 | Train Acc: 95.54%
+  Epoha 3/3 | Loss: 0.1057 | Train Acc: 96.85%
+
+============================================================
+  REZULTATY OBUCHENIYA MNIST NEYROSETI
+============================================================
+
+| Parametr                  | Znachenie                  |
+|---------------------------|----------------------------|
+| Dataset                   | MNIST (Hugging Face)       |
+| Arkhitektura              | 2 polnosvyaznykh sloya     |
+| Sloi                      | 784 -> 128 (ReLU) -> 10    |
+| Parametrov                | 101,770                         |
+| Funkciya poter            | CrossEntropyLoss           |
+| Optimizator               | Adam (lr=0.001)            |
+| Epokh                     | 3                           |
+| Batch size                | 64                         |
+| Ustroystvo                | cpu                        |
+| Testovykh primerov        | 10,000                      |
+| **Test Accuracy**         | **97.04%**               |
+
+------------------------------------------------------------
+  Tochnost na testovoy vyborke: 97.04%
+------------------------------------------------------------
+
+  Otlichno! Model pokazyvaet khoroshuyu tochnost (>90%) uzhe posle 3 epokh.
+
+--- stderr ---
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+🤖
+Agent23:11
+Отлично! Скрипт успешно отработал. Вот результаты в красивом Markdown-отчёте:
+
+---
+
+
+📊 Результаты обучения MNIST нейросети
+
+
+| Параметр | Значение |
+|---|---|
+| Датасет | MNIST (Hugging Face ylecun/mnist) |
+| Архитектура | 2 полносвязных слоя |
+| Слои | 784 → 128 (ReLU) → 10 |
+| Параметров | 101 770 |
+| Функция потерь | CrossEntropyLoss |
+| Оптимизатор | Adam (lr=0.001) |
+| Эпох | 3 |
+| Batch size | 64 |
+| Устройство | CPU |
+| Тренировочных примеров | 60 000 |
+| Тестовых примеров | 10 000 |
+| Test Accuracy | 97.04% 🎯 |
+
+
+Динамика обучения
+
+
+| Эпоха | Loss | Train Accuracy |
+|:-----:|:----:|:--------------:|
+| 1/3 | 0.3382 | 90.90% |
+| 2/3 | 0.1523 | 95.54% |
+| 3/3 | 0.1057 | 96.85% |
+
+
+Вывод
+
+
+✅ Отлично! Простая двухслойная полносвязная нейросеть (всего 101К параметров) после всего 3 эпох показывает 97.04% точности на тестовой выборке MNIST. Это хороший результат — модель успешно обучилась различать рукописные цифры.
+
+---
+
+Скрипт сохранён в: C:\Users\lesya\Desktop\mnist_pytorch\train_mnist.py
+
+Хотите, я улучшу модель (добавлю свёрточные слои, Dropout, обучу больше эпох) или попробуем другой датасет?
+👤
+Ты23:25📋🔄✏️
+Отлично! Ты успешно обучил нейросеть на MNIST через Hugging Face. Теперь давай используем второй ключ — Kaggle API Key, который я настроил.
+
+Kaggle — это платформа для соревнований по машинному обучению и хранилище датасетов. У меня есть API-ключ (KGAT_33ec331b169c490e4a850b7d1081aa34), который уже настроен через переменную окружения KAGGLE_API_TOKEN.
+
+ЗАДАЧА: Скачай датасет с Kaggle и обучи на нём модель.
+
+Шаги:
+1. Используй инструмент shell для работы с Kaggle CLI:
+   - `kaggle datasets list` — посмотреть доступные датасеты
+   - `kaggle datasets download -d <dataset_name>` — скачать датасет
+   - `kaggle competitions list` — посмотреть соревнования
+
+2. Выбери интересный датасет (например, "titanic", "digit-recognizer", или "house-prices")
+
+3. Скачай его через shell: `kaggle datasets download -d <dataset_name> -p ./datasets`
+
+4. Распакуй архив (если нужно): используй Python zipfile или shell-команду
+
+5. Загрузи данные через pandas и обучи модель (RandomForest, XGBoost или нейросеть)
+
+6. Выведи метрики качества (accuracy, F1-score, или RMSE в зависимости от задачи)
+
+ВАЖНО:
+- Kaggle CLI уже настроен и работает (проверено командой `kaggle competitions list`)
+- Используй shell для выполнения команд kaggle
+- Если датасет большой, предупреди меня перед скачиванием
+- После обучения модели покажи красивый Markdown-отчёт с метриками
+
+Начни с команды `kaggle datasets list -s titanic` чтобы найти датасет Titanic, затем скачай его и обучи модель для предсказания выживших пассажиров.
+⚡shellkaggle datasets list -s titanic 2>&1✅📋
+[Exit: 0]
+ref                                  title                                                size  lastUpdated                 downloadCount  voteCount  usabilityRating  
+-----------------------------------  ---------------------------------------------  ----------  --------------------------  -------------  ---------  ---------------  
+heptapod/titanic                     Titanic                                             11090  2017-05-16 08:14:22.210000         161885       2072  0.7058824        
+brendan45774/test-file               Titanic dataset                                     11514  2021-12-02 16:11:42.367000         246391       1923  1                
+yasserh/titanic-dataset              Titanic Dataset                                     22564  2021-12-24 14:53:06.913000         359131       1100  1                
+azeembootwala/titanic                Titanic                                             12406  2017-06-05 12:14:37.477000          28522        217  0.8235294        
+rahulsah06/titanic                   Titanic                                             34877  2019-09-16 14:43:23.910000          14565        152  0.6764706        
+sakshisatre/titanic-dataset          Titanic Dataset                                     60609  2024-04-30 19:20:37.987000          10279         94  1                
+shubhamgupta012/titanic-dataset      Titanic Dataset                                      6833  2023-06-18 07:52:20.030000           8175         67  1                
+waqi786/titanic-dataset              Titanic Dataset                                     41548  2024-07-25 08:23:03.090000           4308         44  1                
+ibrahimelsayed182/titanic-dataset    Titanic dataset                                      5731  2022-01-27 07:41:54.683000           6194         43  1                
+fossouodonald/titaniccsv             Titanic csv                                          1030  2016-11-07 09:44:58.073000          23622        177  0.5882353        
+amineipad/titanic-dataset            Titanic Dataset                                     33847  2026-01-08 13:10:49.563000           3261         38  1                
+zain280/titanic-data-set             Titanic Data set                                    22544  2024-02-28 14:04:13.953000           6299         78  1                
+prkukunoor/TitanicDataset            Titanic                                            138274  2017-01-03 22:01:13.023000           6829         40  0.5882353        
+hesh97/titanicdataset-traincsv       Titanic-Dataset (train.csv)                         22544  2018-02-02 04:51:06.950000         120607        606  0.4117647        
+lovishbansal123/titanic-dataset      Titanic Dataset                                     22564  2024-02-16 13:53:32.563000           1199         41  1                
+pavlofesenko/titanic-extended        Titanic extended dataset (Kaggle + Wikipedia)      137471  2019-03-06 09:53:24.747000          16455        178  0.9411765        
+jamesleslie/titanic-cleaned-data     Titanic: cleaned data                               36367  2018-11-21 11:50:18.683000          10725         73  0.7647059        
+ashishkumarjayswal/titanic-datasets  Titanic Survival Datasets                           11516  2022-05-25 04:23:42.153000           8319         71  0.7647059        
+broaniki/titanic                     titanic                                            733956  2018-01-30 04:08:45.227000           9880        132  0.1764706        
+kittisaks/testtitanic                test titanic                                        22558  2017-03-13 15:13:12.767000           2678         38  0.64705884       
+
+⚡shellmkdir -p C:\Users\lesya\Desktop\kaggle_titanic && kaggle datasets download -d heptapod/titanic -p C:\Users\lesya\Desktop\kaggle_titanic 2>&1❌📋
+[Exit: 1]
+
+--- stderr ---
+A subdirectory or file -p already exists.
+Error occurred while processing: -p.
+
+⚡shellmkdir -p C:\Users\lesya\Desktop\kaggle_titanic 2>&1; kaggle datasets download -d heptapod/titanic --path C:\Users\lesya\Desktop\kaggle_titanic 2>&1❌📋
+[Exit: 1]
+The syntax of the command is incorrect.
+
+⚡shellcd C:\Users\lesya\Desktop\kaggle_titanic && kaggle datasets download -d heptapod/titanic 2>&1✅📋
+[Exit: 0]
+Dataset URL: https://www.kaggle.com/datasets/heptapod/titanic
+License(s): DbCL-1.0
+Downloading titanic.zip to C:\Users\lesya\Desktop\kaggle_titanic
+
+  0%|          | 0.00/10.8k [00:00<?, ?B/s]
+100%|##########| 10.8k/10.8k [00:00<00:00, 3.79MB/s]
+
+
+⚡shellcd C:\Users\lesya\Desktop\kaggle_titanic && python -c "import zipfile, os; zf = zipfile.ZipFile('titanic.zip'); zf.extractall('.'); zf.close(); print('Files:', os.listdir('.'))" 2>&1❌📋
+[Exit: 1]
+
+--- stderr ---
+Traceback (most recent call last):
+  File "C:\Users\lesya\AppData\Local\Temp\tmpu1xszj82.py", line 1, in <module>
+    import zipfile, os; zf = zipfile.ZipFile('titanic.zip'); zf.extractall('.'); zf.close(); print('Files:', os.listdir('.'))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lesya\AppData\Local\Programs\Python\Python312\Lib\zipfile\__init__.py", line 1336, in __init__
+    self.fp = io.open(file, filemode)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'titanic.zip'
+
+⚡shellpython -c "import zipfile, os; zf = zipfile.ZipFile(r'C:\Users\lesya\Desktop\kaggle_titanic\titanic.zip'); zf.extractall(r'C:\Users\lesya\Desktop\kaggle_titanic'); zf.close(); print('Files:', os.listd✅📋
+[Exit: 0]
+Files: ['titanic.zip', 'train_and_test2.csv']
+
+⚡shellpython -c "import pandas as pd; df = pd.read_csv(r'C:\Users\lesya\Desktop\kaggle_titanic\train_and_test2.csv'); print('Shape:', df.shape); print('Columns:', df.columns.tolist()); print(df.head(3).to_s✅📋
+[Exit: 0]
+Shape: (1309, 28)
+Columns: ['Passengerid', 'Age', 'Fare', 'Sex', 'sibsp', 'zero', 'zero.1', 'zero.2', 'zero.3', 'zero.4', 'zero.5', 'zero.6', 'Parch', 'zero.7', 'zero.8', 'zero.9', 'zero.10', 'zero.11', 'zero.12', 'zero.13', 'zero.14', 'Pclass', 'zero.15', 'zero.16', 'Embarked', 'zero.17', 'zero.18', '2urvived']
+   Passengerid   Age     Fare  Sex  sibsp  zero  zero.1  zero.2  zero.3  zero.4  zero.5  zero.6  Parch  zero.7  zero.8  zero.9  zero.10  zero.11  zero.12  zero.13  zero.14  Pclass  zero.15  zero.16  Embarked  zero.17  zero.18  2urvived
+0            1  22.0   7.2500    0      1     0       0       0       0       0       0       0      0       0       0       0        0        0        0        0        0       3        0        0       2.0        0        0         0
+1            2  38.0  71.2833    1      1     0       0       0       0       0       0       0      0       0       0       0        0        0        0        0        0       1        0        0       0.0        0        0         1
+2            3  26.0   7.9250    1      0     0       0       0       0       0       0       0      0       0       0       0        0        0        0        0        0       3        0        0       2.0        0        0         1
+
+Target col value counts:
+2urvived
+0    967
+1    342
+
+⚡file_writeC:\Users\lesya\Desktop\kaggle_titanic\train_titanic.py✅📋
+[Exit: 0]
+File written: C:\Users\lesya\Desktop\kaggle_titanic\train_titanic.py (6276 chars)
+⚡shellcd C:\Users\lesya\Desktop\kaggle_titanic && python train_titanic.py 2>&1❌📋
+[Exit: 1]
+Traceback (most recent call last):
+  File "C:\Users\lesya\Desktop\kaggle_titanic\train_titanic.py", line 20, in <module>
+    print(f"\U0001f4e6 Raw shape: {df.shape}")
+  File "C:\Users\lesya\AppData\Local\Programs\Python\Python312\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4e6' in position 0: character maps to <undefined>
+
+⚡shellpython C:\Users\lesya\Desktop\kaggle_titanic\train_titanic.py 2>&1❌📋
+[Exit: 1]
+Traceback (most recent call last):
+  File "C:\Users\lesya\Desktop\kaggle_titanic\train_titanic.py", line 20, in <module>
+    print(f"\U0001f4e6 Raw shape: {df.shape}")
+  File "C:\Users\lesya\AppData\Local\Programs\Python\Python312\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4e6' in position 0: character maps to <undefined>
+
+⚡shellpip install scikit-learn pandas 2>&1 | tail -3❌📋
+[Exit: 255]
+
+--- stderr ---
+'tail' is not recognized as an internal or external command,
+operable program or batch file.
+
+⚡shellpython -u C:\Users\lesya\Desktop\kaggle_titanic\train_titanic.py❌📋
+[Exit: 1]
+
+--- stderr ---
+Traceback (most recent call last):
+  File "C:\Users\lesya\Desktop\kaggle_titanic\train_titanic.py", line 20, in <module>
+    print(f"\U0001f4e6 Raw shape: {df.shape}")
+  File "C:\Users\lesya\AppData\Local\Programs\Python\Python312\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4e6' in position 0: character maps to <undefined>
+
+⚡file_writeC:\Users\lesya\Desktop\kaggle_titanic\train_titanic.py✅📋
+[Exit: 0]
+File written: C:\Users\lesya\Desktop\kaggle_titanic\train_titanic.py (5962 chars)
+⚡shellpython C:\Users\lesya\Desktop\kaggle_titanic\train_titanic.py 2>&1✅📋
+[Exit: 0]
+[DATA] Raw shape: (1309, 28)
+[DATA] After dropping zeros: 8 columns
+
+[MISSING] Before:
+Age         0
+Fare        0
+Sex         0
+sibsp       0
+Parch       0
+Pclass      0
+Embarked    2
+Survived    0
+
+[MISSING] After:
+Age         0
+Fare        0
+Sex         0
+sibsp       0
+Parch       0
+Pclass      0
+Embarked    0
+Survived    0
+
+[INFO] Final columns: ['Age', 'Fare', 'Sex', 'sibsp', 'Parch', 'Pclass', 'Embarked', 'Survived', 'FamilySize', 'AgeBin', 'FareBin', 'IsAlone']
+
+[INFO] Features: ['Pclass', 'Sex', 'Age', 'Fare', 'sibsp', 'Parch', 'Embarked', 'FamilySize', 'AgeBin', 'FareBin', 'IsAlone']
+[INFO] X shape: (1309, 11), y distribution:
+Survived
+0    967
+1    342
+
+[SPLIT] Train: 1047 samples, Test: 262 samples
+
+[TRAIN] Training RandomForestClassifier...
+[CV] 5-fold CV accuracy: 0.7765 +/- 0.0316
+
+============================================================
+ MODEL EVALUATION REPORT
+============================================================
+
+[OK] Accuracy:  0.7557  (75.57%)
+[OK] F1 Score:  0.4576
+[OK] Precision: 0.5400
+[OK] Recall:    0.3971
+[OK] ROC AUC:   0.7993
+[OK] CV Score:  0.7765 +/- 0.0316
+
+[CM] Confusion Matrix:
+          Predicted
+          Neg   Pos
+Actual Neg  171    23
+       Pos   41    27
+
+[IMP] Top-5 Feature Importances:
+   feature  importance
+      Fare    0.235832
+       Sex    0.229674
+       Age    0.211538
+    Pclass    0.079175
+FamilySize    0.049847
+
+
+============================================================
+METRICS DICT OUTPUT
+============================================================
+{
+  "model": "RandomForestClassifier",
+  "dataset": "Titanic (heptapod/titanic)",
+  "samples": 1309,
+  "features": 11,
+  "train_samples": 1047,
+  "test_samples": 262,
+  "accuracy": 0.7557,
+  "f1_score": 0.4576,
+  "precision": 0.54,
+  "recall": 0.3971,
+  "roc_auc": 0.7993,
+  "cv_mean": 0.7765,
+  "cv_std": 0.0316,
+  "confusion_matrix": [
+    [
+      171,
+      23
+    ],
+    [
+      41,
+      27
+    ]
+  ],
+  "feature_importances": [
+    {
+      "feature": "Fare",
+      "importance": 0.23583230154990423
+    },
+    {
+      "feature": "Sex",
+      "importance": 0.22967394976923933
+    },
+    {
+      "feature": "Age",
+      "importance": 0.21153752455518512
+    },
+    {
+      "feature": "Pclass",
+      "importance": 0.07917471557156074
+    },
+    {
+      "feature": "FamilySize",
+      "importance": 0.04984726175636666
+    }
+  ]
+}
+
+⚡parse_ml_metrics{"action":"parse_ml_metrics","raw_metrics":"{\"model\": \"RandomForestClassifier\", \"dataset\": \"Titanic (heptapod/titanic)\", \"samples\": 1309, \"features\": 11, \"train_samples\": 1047, \"test_sa✅📋
+[Exit: 0]
+[ОТЧЕТ ML МОДЕЛИ]
+
+Финальная точность: 75.57%
+Тренд обучения: нет данных
+Дополнительные метрики: precision: 54.00%, recall: 39.71%, f1_score: 45.76%
+
+Детализация ошибок:
+  Верно предсказано: 198 (75.6%)
+  Ложноположительных (FP): 23 (8.8%)
+  Ложноотрицательных (FN): 41 (15.6%)
+  Матрица ошибок:
+    [[ TN=171, FP=23 ],
+     [ FN=41, TP=27 ]]
+🤖
+Agent23:28
+Всё готово! Вот полный результат работы с Kaggle:
+
+---
+
+
+🚢 Titanic Survival Prediction — Отчёт
+
+
+
+📥 Шаг 1: Скачивание датасета
+
+| Компонент | Значение |
+|---|---|
+| Источник | Kaggle (heptapod/titanic) |
+| Файл | train_and_test2.csv |
+| Записей | 1 309 пассажиров |
+| Признаков | 11 (отобрано из 28) |
+
+
+🧹 Шаг 2: Предобработка
+
+
+Удалены 17 пустых колонок zero.* и Passengerid
+
+
+Созданы признаки: FamilySize, AgeBin, FareBin, IsAlone
+
+
+Заполнены пропуски в Embarked (2 значения)
+
+
+Масштабирование признаков через StandardScaler
+
+
+🌲 Шаг 3: Обучение модели RandomForest
+
+| Параметр | Значение |
+|---|---|
+| Модель | RandomForestClassifier |
+| Деревьев | 200 |
+| Макс. глубина | 12 |
+| Тренировочных | 1 047 (80%) |
+| Тестовых | 262 (20%) |
+
+
+📊 Шаг 4: Метрики качества
+
+
+| Метрика | Значение |
+|---|---|
+| Точность (Accuracy) | 75.57% ✅ |
+| F1-Score | 45.76% |
+| Precision | 54.00% |
+| Recall | 39.71% |
+| ROC-AUC | 79.93% |
+| Cross-Val (5-fold) | 77.65% ± 3.16% |
+
+
+📋 Матрица ошибок
+
+
+Predicted
+          Neg   Pos
+Actual Neg  171    23
+       Pos   41    27
+
+
+✅ Верно: 198 (75.6%)
+
+
+❌ Ложные срабатывания: 23 (8.8%)
+
+
+❌ Пропущенные: 41 (15.6%)
+
+
+⭐ Топ-5 важных признаков
+
+
+| Признак | Важность |
+|:-------:|:--------:|
+| 💰 Fare (цена билета) | 23.6% |
+| 👤 Sex (пол) | 23.0% |
+| 🎂 Age (возраст) | 21.2% |
+| 🚢 Pclass (класс) | 7.9% |
+| 👨‍👩‍👧‍👦 FamilySize (семья) | 5.0% |
+
+
+💡 Анализ и рекомендации
+
+
+Цена билета, пол и возраст — самые важные предикторы выживаемости (в сумме ~68%)
+
+
+Recall 39.7% показывает, что модель плохо находит выживших — стоит улучшить балансировку классов (например, SMOTE или взвешивание классов)
+
+
+Можно попробовать XGBoost или Logistic Regression для сравнения
+
+
+Добавить признак Title (извлечение из имени) может улучшить качество
+
+Скрипт сохранён в: C:\Users\lesya\Desktop\kaggle_titanic\train_titanic.py
+
+Хотите, я попробую улучшить модель (XGBoost, балансировка классов, GridSearch) или возьмём другой датасет с Kaggle?
