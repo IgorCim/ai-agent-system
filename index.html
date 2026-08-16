@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Игорь Симонов — AI Agent Builder</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #24292e;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background: #f6f8fa;
+}
+.container { background: white; padding: 50px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+h1 { font-size: 2.5em; margin-bottom: 10px; color: #1a1a1a; }
+h2 { font-size: 1.8em; margin-top: 40px; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #e1e4e8; color: #1a1a1a; }
+h3 { font-size: 1.3em; margin-top: 25px; margin-bottom: 10px; color: #24292e; }
+.subtitle { font-size: 1.2em; color: #586069; margin-bottom: 30px; }
+.links { margin-bottom: 30px; }
+.links a {
+    display: inline-block;
+    background: #0366d6;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+.links a:hover { background: #0256c4; }
+.links a.secondary { background: #2ea44f; }
+.links a.secondary:hover { background: #279042; }
+.case {
+    background: #f6f8fa;
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border-left: 4px solid #0366d6;
+}
+.case h3 { margin-top: 0; }
+.problem { font-weight: 600; color: #d73a49; }
+.solution { font-weight: 600; color: #22863a; }
+.result { font-weight: 600; color: #0366d6; }
+blockquote {
+    border-left: 4px solid #0366d6;
+    padding-left: 20px;
+    margin: 20px 0;
+    color: #586069;
+    font-style: italic;
+}
+ul { margin-left: 20px; margin-bottom: 15px; }
+li { margin-bottom: 8px; }
+.tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 15px 0;
+}
+.tool {
+    background: #e1e4e8;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9em;
+}
+.science {
+    background: #fff5b1;
+    padding: 15px;
+    border-radius: 6px;
+    margin-top: 20px;
+}
+footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #e1e4e8; color: #586069; text-align: center; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🤖 Игорь Симонов</h1>
+<p class="subtitle">AI Agent Builder · AI-Augmented Engineer</p>
+
+<div class="links">
+    <a href="https://github.com/IgorCim/ai-agent-system" target="_blank">💻 GitHub (код)</a>
+    <a href="https://tguainews.great-site.net" target="_blank" class="secondary">🌐 Живой проект</a>
+</div>
+
+<h2>🎯 Обо мне</h2>
+<p>Проектирую и собираю автономных ИИ-агентов, которые <strong>реально выполняют задачи</strong>: пишут и запускают код, настраивают серверы по SSH, обучают модели на GPU, работают с квантовыми вычислениями и внешними API.</p>
+<p style="margin-top: 15px;">Работаю в парадигме <strong>AI-Augmented Engineering</strong>: выступаю как архитектор и продакт-владелец — формулирую задачи, определяю логику и правила обработки ошибок, тестирую результат. Реализацию делегирую ИИ-ассистентам (OpenCode, Cursor). Каждый модуль своей системы понимаю и могу объяснить и защитить.</p>
+
+<h2>🏆 Главный проект: агентная система с 30+ инструментами</h2>
+<p>Автономный агент («свой ChatGPT с руками»), который:</p>
+<ul>
+    <li><strong>Мозг:</strong> LLM через OpenAI-совместимый API (function calling, стриминг, авто-retry, контекст 80K с автосжатием)</li>
+    <li><strong>Руки:</strong> 30+ инструментов — shell, файлы, HuggingFace, Modal (облачный GPU), SSH-серверы, IBM Quantum, Cortical Labs (биокомпьютер), 16 SNN-библиотек</li>
+    <li><strong>Правила:</strong> Self-Healing (автопочинка при ошибках), STOP ON SUCCESS, защита от «рассужденческого шторма», безопасность ключей</li>
+</ul>
+
+<div class="tools">
+    <span class="tool">Python</span>
+    <span class="tool">Flask</span>
+    <span class="tool">DeepSeek API</span>
+    <span class="tool">paramiko (SSH)</span>
+    <span class="tool">Modal.com</span>
+    <span class="tool">HuggingFace</span>
+    <span class="tool">Qiskit</span>
+    <span class="tool">PennyLane</span>
+    <span class="tool">PyInstaller</span>
+</div>
+
+<h2>📋 Кейсы</h2>
+
+<div class="case">
+    <h3>Кейс 1: Настройка GPU-сервера под ключ</h3>
+    <p class="problem">Проблема:</p>
+    <p>Клиент арендовал VPS с NVIDIA L4 (24 ГБ), но сервер не настроен — драйверов NVIDIA нет, pip отсутствует, PyTorch не видит GPU.</p>
+    <p class="solution" style="margin-top: 10px;">Решение:</p>
+    <p>Агент по SSH выполнил полную настройку: автодиагностика → установка драйверов (включая нюанс: драйвер встал под новое ядро, агент доустановил модули под работающее ядро <strong>БЕЗ перезагрузки</strong>) → pip + PyTorch CUDA 12.1 + TensorFlow + Jupyter → тестовое обучение на GPU (loss 1.04 → 0.83 за 0.54 с) → Markdown-отчёт.</p>
+    <p class="result" style="margin-top: 10px;">Результат:</p>
+    <p>Сервер полностью готов к обучению нейросетей за ~15 минут, без ручного вмешательства.</p>
+</div>
+
+<div class="case">
+    <h3>Кейс 2: Архитектурные предложения для Вайб-Маркетолог</h3>
+    <p class="problem">Проблема:</p>
+    <p>Тестовое задание на позицию AI-разработчика, 1000+ кандидатов.</p>
+    <p class="solution" style="margin-top: 10px;">Решение:</p>
+    <p>Предложил 6 улучшений их Agent API на базе своих механик: автоподмена неправильных параметров, Self-Healing, STOP ON SUCCESS + смета, автодиагностика, советник по выбору модели, безопасность API-ключей.</p>
+    <p class="result" style="margin-top: 10px;">Результат:</p>
+    <p>Основатель прочитал работу лично и отметил:</p>
+    <blockquote>«Адаптивная поправка параметров вместо повтора той же операции — ровно то, чего не хватает большинству присланных решений. Повторить упавший шаг умеют все; изменить параметр по причине отказа — почти никто».</blockquote>
+</div>
+
+<div class="case">
+    <h3>Кейс 3: ML-пайплайн от данных до метрик</h3>
+    <p><code>fetch_dataset</code> (HuggingFace, streaming) → обучение (локально или на GPU-сервере) → <code>parse_ml_metrics</code> → Markdown-отчёт (accuracy, F1, матрица ошибок).</p>
+    <p style="margin-top: 10px;">Если данных нет — агент сам скачивает датасет. Если <code>ModuleNotFoundError</code> — сам ставит пакет. Если <code>CUDA OOM</code> — сам уменьшает batch и повторяет.</p>
+</div>
+
+<h2>🔬 Наука и ранние проекты</h2>
+<ul>
+    <li><strong>Сайт подбора новостей с ИИ-фильтрацией</strong> (работает): <a href="https://tguainews.great-site.net" target="_blank">tguainews.great-site.net</a></li>
+    <li><strong>Анализ магнитного поля Земли</strong> (научные работы): эмпирическая модель прогнозирования локальных возмущений, обработка данных магнитометра спутника ReshUCube-1. Дипломы победителя конференций (III степень — Краевой форум «Научно-технический потенциал Сибири», Абсолютное первенство форума «Шаг в будущее» в номинации «Лучшая работа в области глобальных проблем человечества»)</li>
+    <li><strong>Генератор 3D-моделей по чертежам</strong> (Qwen-VL + OpenSCAD, в разработке)</li>
+</ul>
+
+<div class="science">
+    <strong>🎓 Научные достижения:</strong>
+    <ul style="margin-top: 10px;">
+        <li>Диплом I степени — Краевой молодёжный форум «Научно-технический потенциал Сибири» (2023)</li>
+        <li>Абсолютное первенство — Международный форум «Шаг в будущее» (Москва, 2024)</li>
+        <li>Диплом III степени — Балтийский научно-инженерный конкурс (2026)</li>
+    </ul>
+</div>
+
+<h2>📬 Контакты</h2>
+<ul>
+    <li><strong>GitHub:</strong> <a href="https://github.com/IgorCim">github.com/IgorCim</a></li>
+    <li><strong>Telegram:</strong> [твой телеграм]</li>
+</ul>
+
+<footer>
+    <p>© 2026 Игорь Симонов · AI Agent Builder / Prompt Engineer / AI Manager </p>
+    <p style="margin-top: 10px; font-size: 0.9em;">Портфолио создано с помощью AI-Augmented Engineering</p>
+</footer>
+
+</div>
+</body>
+</html>
