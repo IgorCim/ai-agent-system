@@ -33,6 +33,7 @@ footer { margin-top:40px; color:#586069; text-align:center; font-size:.9em; }
 <div class="case gold">
 <span class="tag gold">🥇 GPU + ГОТОВЫЙ ПРОДУКТ</span>
 <h2>CIFAR-10: обучение на GPU и веб-интерфейс</h2>
+<p><a href="log_cifar10_gpu.txt" target="_blank">📄 Полный лог (очищенный)</a></p>
 <p class="p">Задача:</p><p>Обучить классификатор изображений и дать пользователю удобный интерфейс для проверки своих картинок.</p>
 <p class="s">Что сделал агент:</p>
 <ul>
@@ -50,6 +51,7 @@ Web UI: Gradio, порт 7860</pre>
 <div class="case">
 <span class="tag">ИНФРАСТРУКТУРА</span>
 <h2>Настройка GPU-сервера под ключ</h2>
+<p><a href="log_server_setup.txt" target="_blank">📄 Полный лог (очищенный)</a></p>
 <p class="p">Проблема:</p><p>VPS с NVIDIA L4: нет драйверов, нет pip, PyTorch не видит GPU.</p>
 <p class="s">Решение:</p><p>Автодиагностика → драйверы NVIDIA → нюанс: драйвер встал под новое ядро, агент доустановил модули под работающее ядро <b>без перезагрузки</b> → pip + PyTorch CUDA 12.1 + TensorFlow + Jupyter → тестовое обучение.</p>
 <pre>PyTorch 2.5.1+cu121 · CUDA: True · NVIDIA L4
@@ -60,6 +62,7 @@ Loss: 1.04 → 0.83 за 0.54 с</pre>
 <div class="case">
 <span class="tag">КВАНТОВОЕ ML + ХИМИЯ</span>
 <h2>Молекулы BBBP: классика против квантовой сети</h2>
+<p><a href="log_bbbp_quantum.txt" target="_blank">📄 Полный лог (очищенный)</a></p>
 <p class="p">Задача:</p><p>Предсказать, проникает ли молекула через гематоэнцефалический барьер (скрининг лекарств, датасет несбалансирован: 76.5% BBB+).</p>
 <p class="s">Что сделал агент:</p>
 <ul>
@@ -76,6 +79,7 @@ Loss: 0.6859 → 0.3294</pre>
 <div class="case">
 <span class="tag">КВАНТОВОЕ ML</span>
 <h2>QSVM против классического SVM</h2>
+<p><a href="log_qsvm.txt" target="_blank">📄 Полный лог (очищенный)</a></p>
 <p class="p">Задача:</p><p>Сравнить квантовое fidelity-ядро (4 кубита, data re-uploading) с RBF-ядром на данных с периодической границей sin(3·x₁).</p>
 <p class="s">Что сделано:</p><p>Квантовое ядро в PennyLane → SVC(kernel='precomputed') → контурные границы решений → веб-приложение Gradio со слайдерами x₁/x₂.</p>
 <img src="comparison.png" alt="Границы решений QSVM vs RBF">
@@ -94,6 +98,7 @@ Loss: 0.6859 → 0.3294</pre>
 <div class="case">
 <span class="tag">ML-ПАЙПЛАЙН</span>
 <h2>MNIST: 97.04% с автоотчётом</h2>
+<p><a href="log_mnist.txt" target="_blank">📄 Полный лог (очищенный)</a></p>
 <p class="p">Задача:</p><p>Обучить нейросеть на MNIST и выдать отчёт в Markdown.</p>
 <p class="s">Что сделал агент:</p><p>Скачал датасет с HuggingFace (streaming) → обучил сеть 784→128→10 (101 770 параметров) → сгенерировал отчёт.</p>
 <pre>Test Accuracy: 97.04%
@@ -104,6 +109,7 @@ Epochs: 3 · Loss: 0.338 → 0.106</pre>
 <div class="case">
 <span class="tag">SELF-HEALING ВЖИВУЮ</span>
 <h2>Пайплайн sst2: агент сам починил свою ошибку</h2>
+<p><a href="log_selfhealing.txt" target="_blank">📄 Полный лог (очищенный)</a></p>
 <p class="p">Ситуация:</p><p>При запуске локального ML-пайплайна агент столкнулся с ошибками в коде и сменой источника данных.</p>
 <p class="s">Что сделал:</p><p>Проанализировал трейсбек → исправил код → повторил. Когда стриминг датасета оказался недоступен — переключился на запасной источник и довёл обучение до конца → Markdown-отчёт с метриками.</p>
 <pre>[SELF-HEAL] ошибка → анализ → исправление → повтор
