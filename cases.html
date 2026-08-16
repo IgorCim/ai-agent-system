@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Галерея кейсов — Игорь Симонов</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,'Segoe UI',Roboto,sans-serif; line-height:1.6; color:#24292e; max-width:900px; margin:0 auto; padding:40px 20px; background:#f6f8fa; }
+.container { background:white; padding:50px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,.12); }
+h1 { font-size:2.2em; margin-bottom:10px; }
+h2 { font-size:1.4em; margin-bottom:10px; }
+.sub { color:#586069; margin-bottom:25px; }
+a.back { color:#0366d6; text-decoration:none; }
+.case { background:#f6f8fa; border-left:4px solid #0366d6; border-radius:6px; padding:20px; margin:20px 0; }
+.case.gold { border-left-color:#d4a017; background:#fffbee; }
+.tag { display:inline-block; background:#0366d6; color:#fff; font-size:.8em; padding:3px 10px; border-radius:12px; margin-bottom:8px; }
+.tag.gold { background:#d4a017; }
+.p { font-weight:600; color:#d73a49; } .s { font-weight:600; color:#22863a; } .r { font-weight:600; color:#0366d6; }
+pre { background:#1a1a1a; color:#9fef9f; padding:12px; border-radius:6px; overflow-x:auto; font-size:.85em; margin:10px 0; }
+img { max-width:100%; border-radius:6px; margin:12px 0; border:1px solid #e1e4e8; }
+ul { margin-left:20px; margin-bottom:10px; }
+.honest { background:#fff5b1; padding:15px; border-radius:6px; margin-top:30px; }
+footer { margin-top:40px; color:#586069; text-align:center; font-size:.9em; }
+</style>
+</head>
+<body>
+<div class="container">
+<a class="back" href="index.html">← На главную</a>
+<h1>📂 Галерея кейсов</h1>
+<p class="sub">7 реальных задач, выполненных автономным агентом: GPU-продукты, инфраструктура, квантовое ML, наука. Логи опубликованы в очищенном виде (без ключей, токенов и адресов).</p>
+
+<div class="case gold">
+<span class="tag gold">🥇 GPU + ГОТОВЫЙ ПРОДУКТ</span>
+<h2>CIFAR-10: обучение на GPU и веб-интерфейс</h2>
+<p class="p">Задача:</p><p>Обучить классификатор изображений и дать пользователю удобный интерфейс для проверки своих картинок.</p>
+<p class="s">Что сделал агент:</p>
+<ul>
+<li>Подключился к GPU-серверу (NVIDIA L4) по SSH</li>
+<li>Обучил CNN с BatchNorm до <b>73.85%</b>, сохранил модель</li>
+<li>Развернул Gradio веб-интерфейс (порт 7860): картинка → предсказание по 10 классам</li>
+<li>При смене версии Gradio адаптировал код под новый API и дочинил деплой</li>
+</ul>
+<pre>CUDA available: True · GPU: NVIDIA L4
+Model trained: 73.85%
+Web UI: Gradio, порт 7860</pre>
+<p class="r">Результат:</p><p>Полный цикл «обучение на GPU → деплой → готовый веб-продукт».</p>
+</div>
+
+<div class="case">
+<span class="tag">ИНФРАСТРУКТУРА</span>
+<h2>Настройка GPU-сервера под ключ</h2>
+<p class="p">Проблема:</p><p>VPS с NVIDIA L4: нет драйверов, нет pip, PyTorch не видит GPU.</p>
+<p class="s">Решение:</p><p>Автодиагностика → драйверы NVIDIA → нюанс: драйвер встал под новое ядро, агент доустановил модули под работающее ядро <b>без перезагрузки</b> → pip + PyTorch CUDA 12.1 + TensorFlow + Jupyter → тестовое обучение.</p>
+<pre>PyTorch 2.5.1+cu121 · CUDA: True · NVIDIA L4
+Loss: 1.04 → 0.83 за 0.54 с</pre>
+<p class="r">Результат:</p><p>Сервер готов к обучению нейросетей за ~15 минут.</p>
+</div>
+
+<div class="case">
+<span class="tag">КВАНТОВОЕ ML + ХИМИЯ</span>
+<h2>Молекулы BBBP: классика против квантовой сети</h2>
+<p class="p">Задача:</p><p>Предсказать, проникает ли молекула через гематоэнцефалический барьер (скрининг лекарств, датасет несбалансирован: 76.5% BBB+).</p>
+<p class="s">Что сделал агент:</p>
+<ul>
+<li>Поднял GPU-окружение (Ubuntu 24.04, драйвер 580, CUDA 13.0, PennyLane + RDKit)</li>
+<li>Извлёк признаки молекул: Morgan-фингерпринты (RDKit) → PCA → 16 признаков</li>
+<li>Обучил классический PyTorch-baseline на NVIDIA L4 за 1.68 с</li>
+<li>Подготовил сравнение с квантовой нейросетью (QNN PennyLane)</li>
+</ul>
+<pre>AUC = 0.91 · GPU: NVIDIA L4 · train: 1.68 с
+Loss: 0.6859 → 0.3294</pre>
+<p class="r">Результат:</p><p>Сильный baseline против квантовой модели — корректный стандарт QML-исследований.</p>
+</div>
+
+<div class="case">
+<span class="tag">КВАНТОВОЕ ML</span>
+<h2>QSVM против классического SVM</h2>
+<p class="p">Задача:</p><p>Сравнить квантовое fidelity-ядро (4 кубита, data re-uploading) с RBF-ядром на данных с периодической границей sin(3·x₁).</p>
+<p class="s">Что сделано:</p><p>Квантовое ядро в PennyLane → SVC(kernel='precomputed') → контурные границы решений → веб-приложение Gradio со слайдерами x₁/x₂.</p>
+<img src="comparison.png" alt="Границы решений QSVM vs RBF">
+<p class="r">Результат:</p><p>QSVM ловит периодическую границу точнее классического RBF (RBF ≈ 0.86 на тесте).</p>
+</div>
+
+<div class="case">
+<span class="tag">НАУКА · ДАННЫЕ</span>
+<h2>Анализ магнитного поля Земли</h2>
+<p class="p">Задача:</p><p>Обработать и визуализировать компоненты геомагнитного поля (S, D, H, Z) со статистикой и детекцией аномалий.</p>
+<p class="s">Что сделано:</p><p>Magnetic Field Analyzer v2.0: 216 000 измерений на компоненту, медианы/квартили/σ, коридоры ±1σ, детекция выбросов.</p>
+<img src="magnetic_field.png" alt="Компоненты магнитного поля S, D, H, Z">
+<p class="r">Результат:</p><p>Дашборд по магнитометрии; работа выросла из научных проектов (дипломы конференций).</p>
+</div>
+
+<div class="case">
+<span class="tag">ML-ПАЙПЛАЙН</span>
+<h2>MNIST: 97.04% с автоотчётом</h2>
+<p class="p">Задача:</p><p>Обучить нейросеть на MNIST и выдать отчёт в Markdown.</p>
+<p class="s">Что сделал агент:</p><p>Скачал датасет с HuggingFace (streaming) → обучил сеть 784→128→10 (101 770 параметров) → сгенерировал отчёт.</p>
+<pre>Test Accuracy: 97.04%
+Epochs: 3 · Loss: 0.338 → 0.106</pre>
+<p class="r">Результат:</p><p>Автономный пайплайн «данные → обучение → отчёт».</p>
+</div>
+
+<div class="case">
+<span class="tag">SELF-HEALING ВЖИВУЮ</span>
+<h2>Пайплайн sst2: агент сам починил свою ошибку</h2>
+<p class="p">Ситуация:</p><p>При запуске локального ML-пайплайна агент столкнулся с ошибками в коде и сменой источника данных.</p>
+<p class="s">Что сделал:</p><p>Проанализировал трейсбек → исправил код → повторил. Когда стриминг датасета оказался недоступен — переключился на запасной источник и довёл обучение до конца → Markdown-отчёт с метриками.</p>
+<pre>[SELF-HEAL] ошибка → анализ → исправление → повтор
+Итог: Exit: 0, отчёт сгенерирован</pre>
+<p class="r">Результат:</p><p>Задача выполнена без вмешательства человека — это и есть автономность.</p>
+</div>
+
+<div class="honest">
+<b>Честность данных:</b> опубликованы выжимки и артефакты; из логов удалены ключи, токены, IP и пути. Полные логи — лично по запросу.<br>
+<b>Честные ограничения:</b> Kaggle-«облако» — эмуляция (интерфейс готов); Quantum Inspire — старый REST недоступен (OAuth2); IBM Quantum run_on_real реализован, но не тестировался вживую (ключи IBM недоступны публично). Локальная симуляция, транспиляция, ZNE/DD — работают.
+</div>
+
+<footer>© 2026 Игорь Симонов · <a href="https://github.com/IgorCim/ai-agent-system">GitHub</a> · Видео-демо добавляются</footer>
+</div>
+</body>
+</html>
